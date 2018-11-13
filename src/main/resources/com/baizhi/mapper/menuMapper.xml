@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.MenuDao">
+
+
+    <select id="queryAll" resultMap="MyMenu">
+  	 select s.id sid,s.name sname,s.href shref,s.iconCls siconCls
+        ,	p.id pid, p.name pname,p.href phref,p.iconCls piconCls
+        from t_menu s join t_menu p
+        on s.parentId=p.id
+
+
+
+    </select>
+
+        <resultMap id="MyMenu" type="com.baizhi.entity.Menu">
+            <id  column="pid"  property="id"/>
+            <result column="pname" property="name"/>
+            <result column="phref" property="href"/>
+            <result column="piconCls" property="iconCls"/>
+            <collection property="menus" ofType="com.baizhi.entity.Menu">
+                <id  column="sid"  property="id"/>
+                <result column="sname" property="name"/>
+                <result column="shref" property="href"/>
+                <result column="siconCls" property="iconCls"/>
+
+            </collection>
+        </resultMap>
+
+    <select id="queryBanner" resultType="com.baizhi.entity.Banner">
+        select b_id,b_title,b_imgPath,b_desc,b_status,b_date from banner limit #{start},#{rows}
+    </select>
+
+    <select id="findTotals" resultType="long">
+        select count(b_id) from banner
+    </select>
+
+    <insert id="insertBanner" parameterType="com.baizhi.entity.Banner">
+      INSERT INTO `houqi`.`banner` (`b_id`,`b_title`, `b_imgPath`, `b_desc`,`b_status`, `b_date`)
+      VALUES (#{b_id},#{b_title}, #{b_imgPath},#{b_desc},#{b_status},#{b_date})
+    </insert>
+
+    <delete id="del" parameterType="com.baizhi.entity.Banner">
+  	   delete from banner where b_id=#{b_id}
+    </delete>
+
+    <update id="update">
+  	  update banner set b_title=#{b_title},b_imgPath=#{b_imgPath},b_desc=#{b_desc},b_status=#{b_status},b_date=#{b_date} where b_id=#{b_id}
+    </update>
+
+    <select id="queryBan" resultType="com.baizhi.entity.Banner">
+  	  select b_id,b_title,b_imgPath,b_desc,b_status,b_date from banner where b_id=#{b_id}
+    </select>
+</mapper>
